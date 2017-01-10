@@ -52,8 +52,16 @@ namespace MWS.WebService
                 else
                 {
                     _webServiceProxy = new WebProxy(address, true);
-                    _webServiceProxy.UseDefaultCredentials = true;
-                    //_webServiceProxy.Credentials = new NetworkCredential()
+                    if (Configuration.GetWebServiceProxyCredential() == null)
+                    {
+                        _webServiceProxy.UseDefaultCredentials = true;
+                    }
+                    else
+                    {
+                        _webServiceProxy.UseDefaultCredentials = false;
+                        _webServiceProxy.Credentials = Configuration.GetWebServiceProxyCredential();
+                    }
+
                     _webServiceProxyAddress = address;
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace MWS.WindowsService
@@ -24,6 +25,11 @@ namespace MWS.WindowsService
         string WebServiceHost { get; }
         string WebServiceProtocol { get; }
         string WebServiceProxy { get; }
+
+        /// <summary>
+        /// Returns Network credentials to be used in the proxy, null if default credentials are to be used
+        /// </summary>
+        NetworkCredential WebServiceProxyCredentials { get; }
         #endregion
 
         #region Windows Server Specific Settings

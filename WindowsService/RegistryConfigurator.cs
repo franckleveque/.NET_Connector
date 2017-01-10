@@ -76,6 +76,11 @@ namespace MWS.WindowsService
             get { return RegistryHelper.ReadString(REGKEY_CONFIG, REGVAL_WEB_SERVICE_PROXY); }
         }
 
+        public System.Net.NetworkCredential WebServiceProxyCredentials
+        {
+            get { return null; }
+        }
+
         private const string REGVAL_TIME_INTERVAL = @"Service Time Interval";
         private const string REGVAL_DEBUG_OUTPUT = @"Debug Output Path";
 

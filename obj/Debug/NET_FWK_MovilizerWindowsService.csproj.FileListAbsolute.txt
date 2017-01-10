@@ -34,3 +34,10 @@ C:\Users\Mario Mira\Desktop\WebinarCode\NET Connector 2.1 without encryption\NET
 C:\Users\Mario Mira\Desktop\WebinarCode\NET Connector 2.1 without encryption\NET_FWK_MovilizerWindowsService\obj\Debug\NET_FWK_MovilizerWindowsService.csproj.GenerateResource.Cache
 C:\Users\Mario Mira\Desktop\WebinarCode\NET Connector 2.1 without encryption\NET_FWK_MovilizerWindowsService\obj\Debug\MWSCore.dll
 C:\Users\Mario Mira\Desktop\WebinarCode\NET Connector 2.1 without encryption\NET_FWK_MovilizerWindowsService\obj\Debug\MWSCore.pdb
+C:\Users\faleve\Documents\.NET_Connector\bin\Debug\MWSCore.dll
+C:\Users\faleve\Documents\.NET_Connector\bin\Debug\MWSCore.pdb
+C:\Users\faleve\Documents\.NET_Connector\obj\Debug\NET_FWK_MovilizerWindowsService.csprojResolveAssemblyReference.cache
+C:\Users\faleve\Documents\.NET_Connector\obj\Debug\MWS.WindowsService.MovilizerWindowsService.resources
+C:\Users\faleve\Documents\.NET_Connector\obj\Debug\NET_FWK_MovilizerWindowsService.csproj.GenerateResource.Cache
+C:\Users\faleve\Documents\.NET_Connector\obj\Debug\MWSCore.dll
+C:\Users\faleve\Documents\.NET_Connector\obj\Debug\MWSCore.pdb
