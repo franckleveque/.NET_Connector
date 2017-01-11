@@ -12,4 +12,10 @@
     <description>$description$</description>
     <copyright>$copyright$</copyright>
   </metadata>
+  <files>
+    <file src="bin\Release\net35\MWSCore.dll" target="lib\net35\MWSCore.dll" />
+    <file src="bin\Release\net35\MWSCore.pdb" target="lib\net35\MWSCore.pdb" />
+    <file src="bin\Release\net45\MWSCore.dll" target="lib\net45\MWSCore.dll" />
+    <file src="bin\Release\net45\MWSCore.pdb" target="lib\net45\MWSCore.pdb" />
+  </files>
 </package>

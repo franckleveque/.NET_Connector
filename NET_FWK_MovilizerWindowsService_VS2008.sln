@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET_FWK_MovilizerWindowsService", "NET_FWK_MovilizerWindowsService.csproj", "{3C151203-4B21-424F-8749-E42E02E677F9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2329BFE2-734A-4EEC-85BF-CF8A44413CCF}"
@@ -9,10 +11,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NET_FWK_MovilizerWindowsService.nuspec = NET_FWK_MovilizerWindowsService.nuspec
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0788CC56-4904-4D01-959E-61E0CD2A906D}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release 4.5|Any CPU = Release 4.5|Any CPU
+		Release 4.5|x86 = Release 4.5|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -21,6 +32,10 @@ Global
 		{3C151203-4B21-424F-8749-E42E02E677F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C151203-4B21-424F-8749-E42E02E677F9}.Debug|x86.ActiveCfg = Debug|x86
 		{3C151203-4B21-424F-8749-E42E02E677F9}.Debug|x86.Build.0 = Debug|x86
+		{3C151203-4B21-424F-8749-E42E02E677F9}.Release 4.5|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C151203-4B21-424F-8749-E42E02E677F9}.Release 4.5|Any CPU.Build.0 = Debug|Any CPU
+		{3C151203-4B21-424F-8749-E42E02E677F9}.Release 4.5|x86.ActiveCfg = Release 4.5|x86
+		{3C151203-4B21-424F-8749-E42E02E677F9}.Release 4.5|x86.Build.0 = Release 4.5|x86
 		{3C151203-4B21-424F-8749-E42E02E677F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C151203-4B21-424F-8749-E42E02E677F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C151203-4B21-424F-8749-E42E02E677F9}.Release|x86.ActiveCfg = Release|x86
