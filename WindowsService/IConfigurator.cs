@@ -36,6 +36,9 @@ namespace MWS.WindowsService
         int ServiceTimeInterval { get; }
         string DebugOutputPath { get; }
         bool ForceRequeingOnError { get; }
+        bool SendToQueues { get; }
+        string RequestQueuePath { get; }
+        string ResponseQueuePath { get; }
         #endregion
     }
 }

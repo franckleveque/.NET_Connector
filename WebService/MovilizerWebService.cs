@@ -8,6 +8,7 @@ using MWS.Helper;
 using MWS.Log;
 using MWS.Templates;
 using MWS.WindowsService;
+using System.Messaging;
 
 namespace MWS.WebService
 {
@@ -232,22 +233,72 @@ namespace MWS.WebService
         public MovilizerResponse PostMovilizerRequest()
         {
             // refresh the web service url
-            this.Url = MovilizerWebServiceConstants.GetWebServiceUrl();
-            this.Proxy = MovilizerWebServiceConstants.GetWebServiceProxy();
-            this.Timeout = 300000; // 5 min
-
-            // create request object
-            MovilizerRequest request = this.ComposeRequest();
-            request.numResponses = 1000;
-
-            string debugOutput = Configuration.GetDebugOutputPath();
-            if (!String.IsNullOrEmpty(debugOutput))
-            {
-                XmlHelper.SerializeToFile(debugOutput + "MovilizerRequest.xml", request);        
-            }
+            MovilizerRequest request = TreatRequest();
 
 
             // consume web service
+            MovilizerResponse response = null;
+            if (Configuration.GetSendToQueues())
+            {
+                // Enqueue request
+                try
+                {
+                    MessageQueue requestQueue = new MessageQueue(Configuration.GetRequestQueue());
+                    MessageQueue responseQueue = new MessageQueue(Configuration.GetResponseQueue());
+                    responseQueue.Formatter = new XmlMessageFormatter(new[] { typeof(MovilizerResponse) });
+                    using (MessageQueueTransaction mx = new MessageQueueTransaction())
+                    {
+                        mx.Begin();
+                        requestQueue.Send(request, mx);
+                        mx.Commit();
+                    }
+
+                    using (MessageQueueTransaction mx = new MessageQueueTransaction())
+                    {
+                        mx.Begin();
+                        response = responseQueue.Receive(new TimeSpan(0, 0, 10), mx).Body as MovilizerResponse;
+                        mx.Commit();
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogFactory.WriteError(e.ToString());
+                }
+            }
+            else
+            {
+                try
+                {
+                    response = PostRequest(request);
+                }
+                catch
+                {
+                    if (Configuration.ForceRequeingOnError())
+                    {
+                        // Requeue waiting message
+                        LogFactory.WriteWarning("Error exceeded 3 consecutive retries, reqeuing messages for further processing.");
+
+                        _moveletSets.AddRange(request.moveletSet);
+                        _moveletAssignments.AddRange(request.moveletAssignment);
+                        request.moveletDelete = _moveletDeletes.ToArray();
+                        request.masterdataPoolUpdate = _masterdataPoolUpdate.ToArray();
+                        request.moveletAssignmentDelete = _moveletDeleteAssignments.ToArray();
+                        request.documentPoolUpdate = _documentPoolUpdate.ToArray();
+                        request.participantReset = _moveletParticipantReset.ToArray();
+                    }
+                }
+            }
+
+            if (response != null)
+            {
+                TreatResponse(response);
+            }
+
+            return response;
+        }
+
+        public MovilizerResponse PostRequest(MovilizerRequest request)
+        {
             MovilizerResponse response = null;
             int countdown = 3;
             while (response == null && countdown > 0)
@@ -266,49 +317,62 @@ namespace MWS.WebService
                         // sleep for 10 seconds and try again
                         Thread.Sleep(10000);
                     }
-                    else if(Configuration.ForceRequeingOnError())
+                    else
                     {
-                        // Requeue waiting message
-                        LogFactory.WriteWarning("Error exceeded 3 consecutive retries, reqeuing messages for further processing.");
-
-                        _moveletSets.AddRange(request.moveletSet);
-                        _moveletAssignments.AddRange(request.moveletAssignment);
-                        request.moveletDelete = _moveletDeletes.ToArray();
-                        request.masterdataPoolUpdate = _masterdataPoolUpdate.ToArray();
-                        request.moveletAssignmentDelete = _moveletDeleteAssignments.ToArray();
-                        request.documentPoolUpdate = _documentPoolUpdate.ToArray();
-                        request.participantReset = _moveletParticipantReset.ToArray();
+                        throw;
                     }
-                }
-            }
-
-            if (response != null)
-            {
-
-                this.EnqueueResponse(response);
-
-                // log status messages
-                MovilizerStatusMessage[] statusMessages = response.statusMessage;
-                if (statusMessages != null)
-                {
-                    foreach (MovilizerStatusMessage statusMessage in statusMessages)
-                    {
-                        LogFactory.WriteEntry(statusMessage);
-                    }
-                }
-
-                // log movelet errors 
-                MovilizerMoveletError[] moveletErrors = response.moveletError;
-                if (moveletErrors != null)
-                {
-                    foreach (MovilizerMoveletError moveletError in moveletErrors)
-                    {
-                        LogFactory.WriteEntry(moveletError);
-                    }  
                 }
             }
 
             return response;
+        }
+
+        private MovilizerRequest TreatRequest()
+        {
+            ConfigureWebServiceForRequest();
+
+            // create request object
+            MovilizerRequest request = this.ComposeRequest();
+            request.numResponses = 1000;
+
+            string debugOutput = Configuration.GetDebugOutputPath();
+            if (!String.IsNullOrEmpty(debugOutput))
+            {
+                XmlHelper.SerializeToFile(debugOutput + "MovilizerRequest.xml", request);
+            }
+            return request;
+        }
+
+        public void ConfigureWebServiceForRequest()
+        {
+            this.Url = MovilizerWebServiceConstants.GetWebServiceUrl();
+            this.Proxy = MovilizerWebServiceConstants.GetWebServiceProxy();
+            this.Timeout = 300000; // 5 min
+        }
+
+        public void TreatResponse(MovilizerResponse response)
+        {
+            this.EnqueueResponse(response);
+
+            // log status messages
+            MovilizerStatusMessage[] statusMessages = response.statusMessage;
+            if (statusMessages != null)
+            {
+                foreach (MovilizerStatusMessage statusMessage in statusMessages)
+                {
+                    LogFactory.WriteEntry(statusMessage);
+                }
+            }
+
+            // log movelet errors 
+            MovilizerMoveletError[] moveletErrors = response.moveletError;
+            if (moveletErrors != null)
+            {
+                foreach (MovilizerMoveletError moveletError in moveletErrors)
+                {
+                    LogFactory.WriteEntry(moveletError);
+                }
+            }
         }
         
         private void InitializeMoveletRequest(MovilizerRequest request)

@@ -121,13 +121,31 @@ namespace MWS.WindowsService
             return _debugOutputPath;
         }
 
+
+
         #endregion
 
+        #region QueuesManager
+        private static bool _sendToQueues;
+        private static string _RequestQueue;
+        private static string _ResponseQueue;
 
-        /*static Configuration()
+        public static bool GetSendToQueues()
         {
-            ReadConfigurationFromRegistry();
-        }*/
+            return _sendToQueues;
+        }
+
+        public static string GetRequestQueue()
+        {
+            return _RequestQueue;
+        }
+
+        public static string GetResponseQueue()
+        {
+            return _ResponseQueue;
+        }
+
+        #endregion 
 
         public static void ReadConfiguration(IConfigurator configurator)
         {
@@ -151,10 +169,13 @@ namespace MWS.WindowsService
                 _serviceTimeInterval = configurator.ServiceTimeInterval;
                 _debugOutputPath = configurator.DebugOutputPath;
                 _forceRequeingOnError = configurator.ForceRequeingOnError;
+                _sendToQueues = configurator.SendToQueues;
+                _RequestQueue = configurator.RequestQueuePath;
+                _ResponseQueue = configurator.ResponseQueuePath;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
     }

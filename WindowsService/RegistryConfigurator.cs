@@ -99,6 +99,21 @@ namespace MWS.WindowsService
             get { return false; }
         }
 
+        public bool SendToQueues
+        {
+            get { return false; }
+        }
+
+        public string RequestQueuePath
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string ResponseQueuePath
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         #endregion
     }
 }
